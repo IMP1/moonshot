@@ -42,7 +42,7 @@ function love.load()
     -- Load Settings (using defaults)
     settings_manager.load({
         window_width = 1280,
-        window_height = 800,
+        window_height = 720,
         volumn_music = 1,
         volumn_sfx = 1,
         language = "en-gb",

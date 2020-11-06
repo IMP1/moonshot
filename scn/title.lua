@@ -66,13 +66,15 @@ end
 
 function scene:draw()
 	local WIDTH = love.graphics.getWidth()
+	
 	love.graphics.draw(BACKGROUND_IMAGE)
+	love.graphics.setShader()
 
 	-- DEBUG BUTTON DRAWING
 	love.graphics.setColor(1, 0, 0)
 	for _, button in pairs(self.buttons) do
 		local x, y = unpack(button.position)
-		love.graphics.circle("line", x, y, button.radius)
+		-- love.graphics.circle("line", x, y, button.radius)
 	end
 end
 
