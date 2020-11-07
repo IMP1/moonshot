@@ -106,3 +106,7 @@ function love.draw()
 	love.graphics.print(T("Moon Shots! | " .. scene_manager.scene().name), 0, love.graphics.getHeight() - 16)
     love.graphics.print(mx .. ", " .. my, 0, 0)
 end
+
+function love.quit()
+    settings_manager.save()
+end
