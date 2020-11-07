@@ -20,6 +20,11 @@ function scene.new()
     self.triggers = {}
     self.timer = 0
 
+    table.insert(self.customers, {
+        sprite = love.graphics.newImage("res/test_1.png"),
+        position = {100, 130},
+    })
+
 	return self
 end
 
@@ -39,6 +44,10 @@ function scene:draw()
         -- TODO: Split background and foreground into different layers and only blur one or the other depending on activity
     end
     love.graphics.draw(BACKGROUND_IMAGE, -self.bar_position, 0)
+    for _, customer in pairs(self.customers) do
+        local x, y = unpack(customer.position)
+        love.graphics.draw(customer.sprite, x, y)
+    end
     love.graphics.setShader()
 end
 
