@@ -15,21 +15,74 @@ function scene.new()
 
 	self.bar_position = 10 -- from 0 to 400?
     self.mixing_drinks = false
+    self.possible_conversations = {}
     self.conversation = nil
     self.customers = {}
     self.triggers = {}
     self.timer = 0
+    self.drinks_made = {}
 
-    table.insert(self.customers, {
-        sprite = love.graphics.newImage("res/test_1.png"),
-        position = {100, 130},
-    })
+    self:addCustomer("test")
+
+    table.insert(self.possible_conversations, love.filesystem.load("dat/conversations/test_1.lua")())
 
 	return self
 end
 
+function scene:startConversation(convo)
+    self.conversation = convo
+    self.conversation.stage = 1
+    self.conversation.timer = 0
+    print("starting conversation")
+end
+
+function scene:addCustomer(id)
+    local details = love.filesystem.load("dat/people/" .. id .. ".lua")()
+    table.insert(self.customers, {
+        id = id,
+        name = details.name,
+        sprite = love.graphics.newImage("res/" .. details.graphics_prefix .. "_1.png"),
+        position = {100, 130},
+    })
+end
+
+function scene:addDrinkRequest(customer_name, drink_name)
+end
+
+function scene:giveDrink(customer_name, drink_name)
+end
+
+function scene:drinksReady(...)
+    return false
+end
+
 function scene:update(dt)
     self.timer = self.timer + dt
+    if self.conversation == nil then
+        local next_convo = nil
+        for i, convo in pairs(self.possible_conversations) do
+            local condition_met = (convo.condition == nil or convo.condition(self))
+            local participants_present = true
+            for _, participant_id in pairs(convo.participants) do
+                local present = false
+                for _, customer in pairs(self.customers) do
+                    if customer.id == participant_id then
+                        present = true
+                    end
+                end
+                if not present then
+                    participants_present = false
+                end
+            end
+            if condition_met and participants_present then
+                next_convo = i
+            end
+        end
+        if next_convo then
+            self:startConversation(self.possible_conversations[next_convo])
+            table.remove(self.possible_conversations, next_convo)
+        end
+    end
 end
 
 function scene:keyPressed(key)

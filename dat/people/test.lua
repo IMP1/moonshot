@@ -1,4 +1,4 @@
 return {
     name = "Yuri",
-    graphic_prefix = "test",
+    graphics_prefix = "test",
 }
