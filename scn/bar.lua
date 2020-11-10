@@ -33,7 +33,7 @@ function scene:startConversation(convo)
     self.conversation = convo
     self.conversation.stage = 1
     self.conversation.timer = 0
-    print("starting conversation")
+    self.conversation.stage_timer = 0
 end
 
 function scene:addCustomer(id)
@@ -56,9 +56,20 @@ function scene:drinksReady(...)
     return false
 end
 
-function scene:update(dt)
-    self.timer = self.timer + dt
-    if self.conversation == nil then
+function scene:getCustomer(id)
+    for _, customer in pairs(self.customers) do
+        if customer.id == id then
+            return customer
+        end
+    end
+    return nil
+end
+
+function scene:updateConversation(dt)
+    if self.conversation then
+        self.conversation.timer = self.conversation.timer + dt
+        self.conversation.stage_timer = self.conversation.stage_timer + dt
+    else
         local next_convo = nil
         for i, convo in pairs(self.possible_conversations) do
             local condition_met = (convo.condition == nil or convo.condition(self))
@@ -85,6 +96,11 @@ function scene:update(dt)
     end
 end
 
+function scene:update(dt)
+    self.timer = self.timer + dt
+    self:updateConversation(dt)
+end
+
 function scene:keyPressed(key)
     if key == "d" then
         self.mixing_drinks = not self.mixing_drinks
@@ -102,6 +118,12 @@ function scene:draw()
         love.graphics.draw(customer.sprite, x, y)
     end
     love.graphics.setShader()
+    if self.conversation then
+        local text = self.conversation.tree[self.conversation.stage].text
+        local speaker_id = self.conversation.tree[self.conversation.stage].speaker
+        local x = self:getCustomer(speaker_id).position[1]
+        love.graphics.printf(text, x, 160, 300)
+    end
 end
 
 return scene

@@ -3,7 +3,8 @@ return {
     condition = function(scene) return true end,
     tree = {
         { -- 1
-            text = "Hello comrade bartender. Please to have drink. One of your finest vodka and one moonshot, also.",
+            text = "Hello comrade bartender.\nPlease to have drink.\nOne of your finest vodka, and one moonshot also.",
+            speaker = "test",
             time = 1,
             timeout = 3,
             responses = {
@@ -19,6 +20,7 @@ return {
         },
         { -- 2
             text = "Thank you comrade. Take your time.",
+            speaker = "test",
             time = 10,
             timeout = 3,
             responses = {
@@ -37,9 +39,11 @@ return {
         },
         { -- 3
             text = "Maybe I come back later, comrade. When you have more time.",
+            speaker = "test",
         },
         { -- 4
             text = "This is delciious drink. You are best bartender.",
+            speaker = "test",
         }
     },
 }
