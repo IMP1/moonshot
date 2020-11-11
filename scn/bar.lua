@@ -69,6 +69,7 @@ function scene:updateConversation(dt)
     if self.conversation then
         self.conversation.timer = self.conversation.timer + dt
         self.conversation.stage_timer = self.conversation.stage_timer + dt
+        -- TODO: Have time run out.
     else
         local next_convo = nil
         for i, convo in pairs(self.possible_conversations) do
@@ -105,6 +106,7 @@ function scene:keyPressed(key)
     if key == "d" then
         self.mixing_drinks = not self.mixing_drinks
     end
+    -- TODO: If there's a conversation on screen, then choose an option with number keys?
 end
 
 function scene:draw()
@@ -123,6 +125,9 @@ function scene:draw()
         local speaker_id = self.conversation.tree[self.conversation.stage].speaker
         local x = self:getCustomer(speaker_id).position[1]
         love.graphics.printf(text, x, 160, 300)
+
+        -- TODO: Draw time remaining...
+        -- TODO: Draw response options
     end
 end
 

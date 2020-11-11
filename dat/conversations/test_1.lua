@@ -3,7 +3,7 @@ return {
     condition = function(scene) return true end,
     tree = {
         { -- 1
-            text = "Hello comrade bartender.\nPlease to have drink.\nOne of your finest vodka, and one moonshot also.",
+            text = "Hello comrade bartender.\nPlease to have drink.\nOne of your finest vodka.\nAlso one moonshot.",
             speaker = "test",
             time = 1,
             timeout = 3,
