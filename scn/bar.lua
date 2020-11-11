@@ -69,7 +69,13 @@ function scene:updateConversation(dt)
     if self.conversation then
         self.conversation.timer = self.conversation.timer + dt
         self.conversation.stage_timer = self.conversation.stage_timer + dt
-        -- TODO: Have time run out.
+        if self.conversation.stage_timer >= self.conversation.tree[self.conversation.stage].time then
+            self.conversation.stage_timer = self.conversation.stage_timer - self.conversation.tree[self.conversation.stage].time
+            self.conversation.stage = self.conversation.tree[self.conversation.stage].timeout
+            if self.conversation.stage == 0 then
+                self.conversation = nil
+            end
+        end
     else
         local next_convo = nil
         for i, convo in pairs(self.possible_conversations) do
@@ -126,7 +132,15 @@ function scene:draw()
         local x = self:getCustomer(speaker_id).position[1]
         love.graphics.printf(text, x, 160, 300)
 
-        -- TODO: Draw time remaining...
+        local time_taken = self.conversation.stage_timer
+        local time_total = self.conversation.tree[self.conversation.stage].time
+        love.graphics.setColor(0, 0, 0)
+        love.graphics.rectangle("fill", x - 40, 160, 4, 120)
+        love.graphics.setColor(0, 1, 1)
+        love.graphics.rectangle("fill", x - 40, 160 + (time_taken / time_total) * 120, 4, 120 * (1 - time_taken / time_total))
+        love.graphics.setColor(1, 1, 1)
+        love.graphics.rectangle("line", x - 40, 160, 4, 120)
+
         -- TODO: Draw response options
     end
 end

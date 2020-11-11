@@ -5,7 +5,7 @@ return {
         { -- 1
             text = "Hello comrade bartender.\nPlease to have drink.\nOne of your finest vodka.\nAlso one moonshot.",
             speaker = "test",
-            time = 1,
+            time = 3,
             timeout = 3,
             responses = {
                 {
@@ -40,10 +40,14 @@ return {
         { -- 3
             text = "Maybe I come back later, comrade. When you have more time.",
             speaker = "test",
+            time = 2,
+            timeout = 0,
         },
         { -- 4
             text = "This is delciious drink. You are best bartender.",
             speaker = "test",
+            time = 2,
+            timeout = 0,
         }
     },
 }
