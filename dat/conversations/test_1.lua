@@ -21,11 +21,11 @@ return {
         { -- 2
             text = "Thank you comrade. Take your time.",
             speaker = "test",
-            time = 10,
+            time = 60,
             timeout = 3,
             responses = {
                 {
-                    condition = function(scene) 
+                    condition = function(scene)
                         return scene:drinksReady("vodka", "moonshot") 
                     end,
                     text = "Here you go. [1 vodka, 1 moonshot]",
@@ -42,12 +42,14 @@ return {
             speaker = "test",
             time = 2,
             timeout = 0,
+            responses = {},
         },
         { -- 4
             text = "This is delciious drink. You are best bartender.",
             speaker = "test",
             time = 2,
             timeout = 0,
+            responses = {},
         }
     },
 }

@@ -112,7 +112,21 @@ function scene:keyPressed(key)
     if key == "d" then
         self.mixing_drinks = not self.mixing_drinks
     end
-    -- TODO: If there's a conversation on screen, then choose an option with number keys?
+    if self.conversation and (key <= "9" and key >= "0") then
+        local n = tonumber(key)
+        if n >= 1 and n <= #self.conversation.tree[self.conversation.stage].responses then
+            local response = self.conversation.tree[self.conversation.stage].responses[n]
+            local condition = response.condition
+            if condition == nil or condition(self) then
+                local action = response.action
+                if action then
+                    action(self)
+                end
+                print(response.text)
+                self.conversation.stage = response.next
+            end
+        end
+    end
 end
 
 function scene:draw()
@@ -127,13 +141,16 @@ function scene:draw()
     end
     love.graphics.setShader()
     if self.conversation then
-        local text = self.conversation.tree[self.conversation.stage].text
-        local speaker_id = self.conversation.tree[self.conversation.stage].speaker
+        local convo_stage = self.conversation.tree[self.conversation.stage]
+        local text = convo_stage.text
+        local speaker_id = convo_stage.speaker
         local x = self:getCustomer(speaker_id).position[1]
+        -- TODO: Have a text outline shader to make it all more readable.
+        -- TODO: Get a better font.
         love.graphics.printf(text, x, 160, 300)
 
         local time_taken = self.conversation.stage_timer
-        local time_total = self.conversation.tree[self.conversation.stage].time
+        local time_total = convo_stage.time
         love.graphics.setColor(0, 0, 0)
         love.graphics.rectangle("fill", x - 40, 160, 4, 120)
         love.graphics.setColor(0, 1, 1)
@@ -141,7 +158,16 @@ function scene:draw()
         love.graphics.setColor(1, 1, 1)
         love.graphics.rectangle("line", x - 40, 160, 4, 120)
 
-        -- TODO: Draw response options
+        for i, response in ipairs(convo_stage.responses) do
+            local available = response.condition == nil or response.condition(self)
+            if available then
+                love.graphics.setColor(1, 1, 1)
+            else
+                love.graphics.setColor(0.6, 0.6, 0.6)
+            end
+            -- TODO: Calculate where to draw response options
+            love.graphics.print(tostring(i) .. ". " .. response.text, x, 280 + i*16)
+        end
     end
 end
 
