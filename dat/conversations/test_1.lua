@@ -5,7 +5,7 @@ return {
         { -- 1
             text = "Hello comrade bartender.\nPlease to have drink.\nOne of your finest vodka.\nAlso one moonshot.",
             speaker = "test",
-            time = 3,
+            time = 10,
             timeout = 3,
             responses = {
                 {
@@ -34,22 +34,22 @@ return {
                         scene:giveDrink("test", "moonshot")
                     end,
                     next = 4,
-                }
-            }
+                },
+            },
         },
         { -- 3
             text = "Maybe I come back later, comrade. When you have more time.",
             speaker = "test",
-            time = 2,
+            time = 3,
             timeout = 0,
             responses = {},
         },
         { -- 4
             text = "This is delciious drink. You are best bartender.",
             speaker = "test",
-            time = 2,
+            time = 3,
             timeout = 0,
             responses = {},
-        }
+        },
     },
 }

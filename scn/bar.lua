@@ -5,7 +5,12 @@ local scene = {}
 setmetatable(scene, base_scene)
 scene.__index = scene
 
+local MIX_DRINKS_KEY = "t"
+local SHOW_RECIPES_KEY = "r"
 local BACKGROUND_IMAGE = love.graphics.newImage("res/bar_internal.png")
+local MENU_IMAGE = love.graphics.newImage("res/menu.png")
+local GUI_FONT = love.graphics.newFont("res/MandroidBB.ttf")
+local MENU_FONT = love.graphics.newFont("res/MandroidBB.ttf")
 local BLUR_SHADER_CODE = love.filesystem.read("res/blur_shader.glsl")
 local blur_shader = love.graphics.newShader(BLUR_SHADER_CODE)
 
@@ -15,12 +20,18 @@ function scene.new()
 
 	self.bar_position = 10 -- from 0 to 400?
     self.mixing_drinks = false
+    self.showing_recipes = false
     self.possible_conversations = {}
     self.conversation = nil
     self.customers = {}
     self.triggers = {}
     self.timer = 0
     self.drinks_made = {}
+    self.drink_recipes = love.filesystem.load("dat/bar/recipes.lua")()
+    self.available_drinks = love.filesystem.load("dat/bar/drinks.lua")()
+    self.available_spices = love.filesystem.load("dat/bar/spices.lua")()
+    self.available_glasses = love.filesystem.load("dat/bar/glasses.lua")()
+    self.drinks_being_made = {}
 
     self:addCustomer("test")
 
@@ -109,8 +120,11 @@ function scene:update(dt)
 end
 
 function scene:keyPressed(key)
-    if key == "d" then
+    if key == MIX_DRINKS_KEY then
         self.mixing_drinks = not self.mixing_drinks
+    end
+    if key == SHOW_RECIPES_KEY then
+        self.showing_recipes = not self.showing_recipes
     end
     if self.conversation and (key <= "9" and key >= "0") then
         local n = tonumber(key)
@@ -130,6 +144,7 @@ function scene:keyPressed(key)
 end
 
 function scene:draw()
+    love.graphics.setFont(GUI_FONT)
     if self.mixing_drinks then
         love.graphics.setShader(blur_shader)
         -- TODO: Split background and foreground into different layers and only blur one or the other depending on activity
@@ -167,6 +182,42 @@ function scene:draw()
             end
             -- TODO: Calculate where to draw response options
             love.graphics.print(tostring(i) .. ". " .. response.text, x, 280 + i*16)
+        end
+    end
+    if self.mixing_drinks then
+        -- TODO: Draw drink mixing process
+            -- TODO: Draw available drinks + spices
+            -- TODO: Draw available glasses
+            -- TODO: Draw available mixing glass/bottle thing that they use for cocktails
+            -- TODO: Draw drinks being made
+        for _, drink in pairs(self.available_drinks) do
+        end
+        for _, spice in pairs(self.available_spices) do
+        end
+        for _, glass in pairs(self.available_glasses) do
+        end
+        for _, drink in pairs(self.drinks_being_made) do
+        end
+    end
+    if self.showing_recipes then
+        -- TODO: Have the recipes scroll when there are too many
+        love.graphics.setColor(1, 1, 1)
+        local x = (640 - MENU_IMAGE:getWidth()) / 2
+        love.graphics.setFont(MENU_FONT)
+        love.graphics.draw(MENU_IMAGE, x, 80)
+        love.graphics.setColor(0.4, 0.2, 0.2)
+        local y = 170
+        for _, recipe in pairs(self.drink_recipes) do
+            love.graphics.print("* " .. recipe.name, x + 12, y)
+            local ingredient_list = ""
+            for i, ingredient in pairs(recipe.ingredients) do
+                ingredient_list = ingredient_list .. ingredient.name
+                if i < #recipe.ingredients then
+                    ingredient_list = ingredient_list .. ", "
+                end
+            end
+            love.graphics.printf(ingredient_list, x + 24, y + 16, MENU_IMAGE:getWidth() - 24)
+            y = y + 48
         end
     end
 end
