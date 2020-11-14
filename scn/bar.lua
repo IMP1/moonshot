@@ -136,7 +136,6 @@ function scene:keyPressed(key)
                 if action then
                     action(self)
                 end
-                print(response.text)
                 self.conversation.stage = response.next
             end
         end
