@@ -116,6 +116,17 @@ function SceneManager.wheelmoved(mx, my, dx, dy)
     end
 end
 
+function SceneManager.mousemoved(mx, my, dx, dy)
+    if current_scene and current_scene.mouseMoved then
+        current_scene:mouseMoved(mx, my, dxm, dy)
+    end
+    for _, scene in pairs(scene_stack) do
+        if scene and scene.backgroundmouseMoved and scene ~= current_scene then
+            scene:backgroundmouseMoved(mx, my, dxm, dy)
+        end
+    end
+end
+
 function SceneManager.update(dt)
     local mx, my = love.mouse.getPosition()
     if current_scene and current_scene.update then
